@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Показать/Скрыть пароль</title>
+        <link rel="stylesheet" href="cssfile6.css">
+    </head>
+    <body>
+        <div class="password-container">
+            <div class="password-field">
+                <input type="password" id="passwordInput" placeholder="Введите пароль">
+                <button class="toggle-password" id="togglePassword">
+                    <i>+</i>
+                </button>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const passwordInput = document.getElementById('passwordInput');
+                const togglePassword = document.getElementById('togglePassword');
+                
+                togglePassword.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    
+                    passwordInput.setAttribute('type', type);
+                    this.innerHTML = type === 'password' ? '+' : '-';
+                });
+            });
+        </script>
+    </body>
+</html>

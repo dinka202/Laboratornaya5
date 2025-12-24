@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Переключатель темы</title>
+        <link rel="stylesheet" href="cssfile1.css">
+    </head>
+    <body>
+        <div class="theme-label">
+            <span>Темная тема:</span>
+            <label class="theme-toggle">
+                <input type="checkbox" id="themeSwitch">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="content">
+            <h1>Пример</h1>
+            <p>Переключение темы.</p>
+        </div>
+
+        <script>
+            const themeSwitch = document.getElementById('themeSwitch');
+            const body = document.body;
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-theme');
+                themeSwitch.checked = true;
+            }
+
+            themeSwitch.addEventListener('change', function() {
+                if (this.checked) {
+                    body.classList.add('dark-theme');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    body.classList.remove('dark-theme');
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        </script>
+    </body>
+</html>

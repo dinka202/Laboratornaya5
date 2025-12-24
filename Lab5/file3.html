@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Слайдер изображений</title>
+        <link rel="stylesheet" href="cssfile3.css">
+    </head>
+    <body>
+        <div class="image-slider">
+            <div class="slider-container" id="sliderContainer">
+                <div class="slide">
+                    <img src="i%20(1).jpg" alt="Природа 1">
+                </div>
+                <div class="slide">
+                    <img src="i.jpg" alt="Природа 2">
+                </div>
+                <div class="slide">
+                    <img src="lake_mountains_trees_1219008_1920x1080.jpg" alt="Природа 3">
+                </div>
+                <div class="slide">
+                    <img src="mountains_clouds_landscape_1215235_1920x1080.jpg" alt="Природа 4">
+                </div>
+            </div>
+            <div class="slider-nav">
+                <button id="prevBtn">&#10094;</button>
+                <button id="nextBtn">&#10095;</button>
+            </div>
+            <div class="slider-dots" id="sliderDots">
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const sliderContainer = document.getElementById('sliderContainer');
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                const sliderDots = document.getElementById('sliderDots');
+                const slides = document.querySelectorAll('.slide');
+                let currentIndex = 0;
+                const slideCount = slides.length;
+
+                for (let i = 0; i < slideCount; i++) {
+                    const dot = document.createElement('div');
+                    dot.classList.add('slider-dot');
+                    if (i === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => goToSlide(i));
+                    sliderDots.appendChild(dot);
+                }
+
+                const dots = document.querySelectorAll('.slider-dot');
+                function goToSlide(index) {
+                    if (index < 0) {
+                        index = slideCount - 1;
+                    } else if (index >= slideCount) {
+                        index = 0;
+                    }
+                    currentIndex = index;
+                    updateSlider();
+                }
+
+                function updateSlider() {
+                    sliderContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+                    dots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === currentIndex);
+                    });
+                }
+
+                prevBtn.addEventListener('click', () => goToSlide(currentIndex - 1));
+                nextBtn.addEventListener('click', () => goToSlide(currentIndex + 1));
+                let slideInterval = setInterval(() => goToSlide(currentIndex + 1), 5000);
+                const slider = document.querySelector('.image-slider');
+                slider.addEventListener('mouseenter', () => clearInterval(slideInterval));
+                slider.addEventListener('mouseleave', () => {
+                    slideInterval = setInterval(() => goToSlide(currentIndex + 1), 5000);
+                });
+                updateSlider();
+            });
+        </script>
+    </body>
+</html>

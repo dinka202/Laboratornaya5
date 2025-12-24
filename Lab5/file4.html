@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Переключатель языка</title>
+        <link rel="stylesheet" href="cssfile4.css">
+    </head>
+    <body>
+        <div class="language-switcher">
+            <div class="language-select" id="languageSelect">
+                <span id="currentLanguage">Русский</span>
+            </div>
+            <div class="language-dropdown" id="languageDropdown">
+                <div class="language-option active" data-lang="ru">Русский</div>
+                <div class="language-option" data-lang="en">English</div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="greeting" id="greeting">Привет!</div>
+            <div class="message" id="message">Пожалуйста, выберите язык интерфейса.</div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const languageSelect = document.getElementById('languageSelect');
+                const languageDropdown = document.getElementById('languageDropdown');
+                const currentLanguage = document.getElementById('currentLanguage');
+                const greeting = document.getElementById('greeting');
+                const message = document.getElementById('message');
+                const languageOptions = document.querySelectorAll('.language-option');
+
+                const translations = {
+                    ru: {
+                        greeting: "Привет!",
+                        message: "Пожалуйста, выберите язык интерфейса."
+                    },
+                    en: {
+                        greeting: "Hello!",
+                        message: "Please select your interface language."
+                    }
+                };
+
+                languageSelect.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    languageDropdown.classList.toggle('show');
+                });
+
+                document.addEventListener('click', function() {
+                    languageDropdown.classList.remove('show');
+                });
+
+                languageOptions.forEach(option => {
+                    option.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const lang = this.getAttribute('data-lang');
+                        currentLanguage.textContent = this.textContent;
+                        languageOptions.forEach(opt => opt.classList.remove('active'));
+                        this.classList.add('active');
+                        updateContent(lang);
+                        localStorage.setItem('selectedLanguage', lang);
+                        languageDropdown.classList.remove('show');
+                    });
+                });
+
+                function updateContent(lang) {
+                    const translation = translations[lang] || translations.ru;
+                    greeting.textContent = translation.greeting;
+                    message.textContent = translation.message;
+                }
+
+                const savedLanguage = localStorage.getItem('selectedLanguage');
+                if (savedLanguage && (savedLanguage === 'ru' || savedLanguage === 'en')) {
+                    const savedOption = document.querySelector(`.language-option[data-lang="${savedLanguage}"]`);
+                    if (savedOption) {
+                        currentLanguage.textContent = savedOption.textContent;
+                        savedOption.classList.add('active');
+                        updateContent(savedLanguage);
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

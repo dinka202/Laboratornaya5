@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Поиск по категориям</title>
+        <link rel="stylesheet" href="cssfile7.css">
+    </head>
+    <body>
+        <div class="category-search">
+            <h2 class="category-title">Поиск по категориям</h2>
+            <div class="category-filters">
+                <button class="category-btn active" data-category="all">Все</button>
+                <button class="category-btn" data-category="nature">Природа</button>
+                <button class="category-btn" data-category="city">Город</button>
+            </div>
+            <div class="image-grid" id="imageGrid">
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const categoryButtons = document.querySelectorAll('.category-btn');
+                const imageGrid = document.getElementById('imageGrid');
+                const imagesData = [
+                    {
+                        category: 'nature',
+                        caption: 'Горный пейзаж'
+                    },
+                    {
+                        category: 'nature',
+                        caption: 'Лесной водопад'
+                    },
+                    {
+                        category: 'city',
+                        caption: 'Городской пейзаж'
+                    },
+                    {
+                        category: 'city',
+                        caption: 'Улица ночью'
+                    }
+                ];
+                
+                function displayImages(category = 'all') {
+                    imageGrid.innerHTML = '';
+                    const filteredImages = category === 'all'
+                        ? imagesData
+                        : imagesData.filter(img => img.category === category);
+                    if (filteredImages.length === 0) {
+                        imageGrid.innerHTML = '<div class="no-results">Нет изображений в этой категории</div>';
+                        return;
+                    }
+
+                    filteredImages.forEach(image => {
+                        const imageItem = document.createElement('div');
+                        imageItem.className = 'image-item';
+                        imageItem.innerHTML = `
+                            <img alt="${image.caption}">
+                            <div class="image-caption">${image.caption}</div>
+                        `;
+                        imageGrid.appendChild(imageItem);
+                    });
+                }
+
+                categoryButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        categoryButtons.forEach(btn => btn.classList.remove('active'));
+                        this.classList.add('active');
+                        const category = this.getAttribute('data-category');
+                        displayImages(category);
+                    });
+                });
+                displayImages('all');
+            });
+        </script>
+    </body>
+</html>

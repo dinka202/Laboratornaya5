@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="UTF-8">
+        <title>Калькулятор</title>
+        <link rel="stylesheet" href="cssfile2.css">
+    </head>
+    <body>
+        <div class="calculator">
+            <div class="calculator-display" id="display">0</div>
+            <div class="calculator-keys">
+                <div class="calculator-key" data-value="7">7</div>
+                <div class="calculator-key" data-value="8">8</div>
+                <div class="calculator-key" data-value="9">9</div>
+                <div class="calculator-key operator" data-value="/">/</div>
+
+                <div class="calculator-key" data-value="4">4</div>
+                <div class="calculator-key" data-value="5">5</div>
+                <div class="calculator-key" data-value="6">6</div>
+                <div class="calculator-key operator" data-value="*">×</div>
+
+                <div class="calculator-key" data-value="1">1</div>
+                <div class="calculator-key" data-value="2">2</div>
+                <div class="calculator-key" data-value="3">3</div>
+                <div class="calculator-key operator" data-value="-">-</div>
+
+                <div class="calculator-key" data-value="0">0</div>
+                <div class="calculator-key" data-value=".">.</div>
+                <div class="calculator-key equals" data-value="=">=</div>
+                <div class="calculator-key operator" data-value="+">+</div>
+
+                <div class="calculator-key clear" data-value="C">C</div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const display = document.getElementById('display');
+                const keys = document.querySelectorAll('.calculator-key');
+                let currentInput = '0';
+                let previousInput = '';
+                let operation = null;
+                let resetInput = false;
+                let displayExpression = '0';
+
+                keys.forEach(key => {
+                    key.addEventListener('click', () => {
+                        const value = key.getAttribute('data-value');
+
+                        if (value === 'C') {
+                            currentInput = '0';
+                            previousInput = '';
+                            operation = null;
+                            displayExpression = '0';
+                            updateDisplay();
+                        } else if (value === '=') {
+                            if (operation && previousInput !== '') {
+                                currentInput = calculate(previousInput, currentInput, operation);
+                                displayExpression = currentInput;
+                                operation = null;
+                                previousInput = '';
+                                updateDisplay();
+                            }
+                        } else if (['+', '-', '*', '/'].includes(value)) {
+                            if (operation) {
+                                currentInput = calculate(previousInput, currentInput, operation);
+                                displayExpression = currentInput + value;
+                            } else {
+                                displayExpression = currentInput + value;
+                            }
+                            previousInput = currentInput;
+                            operation = value;
+                            resetInput = true;
+                            updateDisplay();
+                        } else {
+                            if (currentInput === '0' || resetInput) {
+                                currentInput = value;
+                                if (operation) {
+                                    displayExpression = previousInput + operation + currentInput;
+                                } else {
+                                    displayExpression = currentInput;
+                                }
+                                resetInput = false;
+                            } else {
+                                currentInput += value;
+                                if (operation) {
+                                    displayExpression = previousInput + operation + currentInput;
+                                } else {
+                                    displayExpression = currentInput;
+                                }
+                            }
+                            updateDisplay();
+                        }
+                    });
+                });
+
+                function updateDisplay() {
+                    display.textContent = displayExpression;
+                }
+
+                function calculate(a, b, op) {
+                    const numA = parseFloat(a);
+                    const numB = parseFloat(b);
+
+                    switch (op) {
+                        case '+':
+                            return (numA + numB).toString();
+                        case '-':
+                            return (numA - numB).toString();
+                        case '*':
+                            return (numA * numB).toString();
+                        case '/':
+                            return numB !== 0 ? (numA / numB).toString() : 'Ошибка';
+                        default:
+                            return b;
+                    }
+                }
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key >= '0' && e.key <= '9') {
+                        const key = document.querySelector(`.calculator-key[data-value="${e.key}"]`);
+                        if (key) key.click();
+                    } else if (e.key === '.' || e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+                        const key = document.querySelector(`.calculator-key[data-value="${e.key === '*' ? '*' : e.key}"]`);
+                        if (key) key.click();
+                    } else if (e.key === 'Enter' || e.key === '=') {
+                        const equalsKey = document.querySelector('.calculator-key.equals');
+                        if (equalsKey) equalsKey.click();
+                    } else if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') {
+                        const clearKey = document.querySelector('.calculator-key.clear');
+                        if (clearKey) clearKey.click();
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
